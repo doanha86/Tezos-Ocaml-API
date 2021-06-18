@@ -88,7 +88,7 @@ SyncAPIV1.call_contract amount pukh_mickey c ~entrypoint ~arg fee
 ....
 ```
 
-### Example 5: Error handling
+### Example 4: Error handling
 ```ocaml
 begin
   SyncAPIV1.get_pukh_from_alias "MickeyMouse"
