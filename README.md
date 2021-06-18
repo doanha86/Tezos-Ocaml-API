@@ -19,19 +19,22 @@ Once you have the Tezos libraries installed, you can easily build the Tezos_Api 
 +-- ...
 +-- lib
 |   +-- dune
-|   +-- SyncAPIV0.mli
-|   +-- SyncAPIV0.ml
-|   +-- SyncAPIV0_context.mli
-|   +-- SyncAPIV0_context.ml
-|   +-- SyncAPIV0_error.mli
-|   +-- SyncAPIV0_error.ml
+|   +-- SyncAPIV1.mli
+|   +-- SyncAPIV1.ml
+|   +-- Api.mli
+|   +-- Api.ml
+|   +-- Api_context.mli
+|   +-- Api_context.ml
+|   +-- Api_error.mli
+|   +-- Api_error.ml
+|   +-- test/
 ```
 
 Inside your projects root dune file, include the Tezos_api and the following dependencies:
 ```
 (executables
  (names my_exe)
- (libraries tezos_api
+ (libraries SyncAPIV1
  	    lwt
 	    lwt.unix
 	    unix
@@ -50,61 +53,49 @@ Build your project with
 ## Code examples
 ### Example 1: Query the balance of an implicit account
 ```ocaml
-  SyncAPIV0.get_contract "MickeyMouse"
+  SyncAPIV1.get_contract "MickeyMouse"
   >>=? fun c->
-  SyncAPIV0.get_balance c
+  SyncAPIV1.get_balance c
   >>=? fun balance ->
   ....
 ```
 
 ### Example 2: Transfer tokens from one account to another
 ```ocaml
-SyncAPIV0.get_pukh_from_alias "MickeyMouse"
+SyncAPIV1.get_pukh_from_alias "MickeyMouse"
 >>=? fun pukh_mickey ->
-SyncAPIV0.get_contract "MinnieMouse"
+SyncAPIV1.get_contract "MinnieMouse"
 >>=? fun c_minnie ->
-let amount = SyncAPIV0.Tez_t.tez 1.0 in
-let fee = SyncAPIV0.Tez_t.tez 0.02 in
-SyncAPIV0.transfer amount pukh_mickey c_minnie fee
+let amount = SyncAPIV1.Tez_t.tez 1.0 in
+let fee = SyncAPIV1.Tez_t.tez 0.02 in
+SyncAPIV1.transfer amount pukh_mickey c_minnie fee
 >>=? fun oph ->
 ....
 ```
 
 ### Example 3: Calling a contract
 ```ocaml
-SyncAPIV0.get_pukh_from_alias "MickeyMouse"
+SyncAPIV1.get_pukh_from_alias "MickeyMouse"
 >>=? fun pukh_mickey ->
-SyncAPIV0.get_contract "KT1VZGyuHDLpUaL67VkZ8gzhmXdn1yXxSwqi"
+SyncAPIV1.get_contract "KT1VZGyuHDLpUaL67VkZ8gzhmXdn1yXxSwqi"
 >>=? fun c ->
-let amount = SyncAPIV0.Tez_t.tez 1.0 in
-let fee = SyncAPIV0.Tez_t.tez 0.02 in
+let amount = SyncAPIV1.Tez_t.tez 1.0 in
+let fee = SyncAPIV1.Tez_t.tez 0.02 in
 let entrypoint = "someEntrypoint" in
 let arg = "Some arguments" in
-SyncAPIV0.call_contract amount pukh_mickey c ~entrypoint ~arg fee
+SyncAPIV1.call_contract amount pukh_mickey c ~entrypoint ~arg fee
 >>=? fun oph ->
 ....
-```
-
-### Example 4: Query an operation status
-```ocaml
-...
->>=? fun oph ->
-SyncAPIV0.query oph
->>=? function
-| Accepted result -> print_endline ("Consumed gas: " ^ string_of_int res.consumed_gas) ; ...
-| Still_pending -> ...
-| Rejected (Reason Insufficient_fee) -> ...
-| ....
 ```
 
 ### Example 5: Error handling
 ```ocaml
 begin
-  SyncAPIV0.get_pukh_from_alias "MickeyMouse"
+  SyncAPIV1.get_pukh_from_alias "MickeyMouse"
   >>=? fun pukh_mickey ->
-  SyncAPIV0.get_contract "KT1VZGyuHDLpUaL67VkZ8gzhmXdn1yXxSwqi"
+  SyncAPIV1.get_contract "KT1VZGyuHDLpUaL67VkZ8gzhmXdn1yXxSwqi"
   >>=? fun c ->
-  SyncAPIV0.call_contract amount pukh_mickey c ~entrypoint ~arg fee
+  SyncAPIV1.call_contract amount pukh_mickey c ~entrypoint ~arg fee
 end
 >>= function
 | Ok oph -> ...
@@ -112,3 +103,5 @@ end
 | Error (Rejection Insufficient_fee) -> ...
 | ....
 ```
+
+
