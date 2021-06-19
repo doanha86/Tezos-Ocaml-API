@@ -88,7 +88,19 @@ SyncAPIV1.call_contract amount pukh_mickey c ~entrypoint ~arg fee
 ....
 ```
 
-### Example 4: Error handling
+### Example 4: Query an operation status
+```ocaml
+...
+>>=? fun oph ->
+SyncAPIV1.query oph
+>>=? function
+| Accepted result -> print_endline ("Consumed gas: " ^ string_of_int res.consumed_gas) ; ...
+| Still_pending -> ...
+| Rejected (Reason Insufficient_fee) -> ...
+| ....
+```
+
+### Example 5: Error handling
 ```ocaml
 begin
   SyncAPIV1.get_pukh_from_alias "MickeyMouse"

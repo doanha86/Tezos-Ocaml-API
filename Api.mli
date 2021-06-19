@@ -154,7 +154,7 @@ val transfer: Tez_t.t -> pukh -> contract -> Tez_t.t -> oph Answer.t
     @param op the operation hash of the injected transaction
     @return {!type:status} the status of the transaction
 *)
-(* val query : oph -> status Answer.t *)
+val query : oph -> status Answer.t
 
 (** [get_balance c] returns the balance of a contract (implicit or originated)
     @param f the contract representation of the target

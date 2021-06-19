@@ -394,7 +394,7 @@ let check_mempool oph =
      end
   | Error errs -> catch_error_f errs
 
-(* let query oph =
+let query oph =
   let ctxt_proto = new wrap_full !ctxt in
   Client_confirmations.lookup_operation_in_previous_blocks
     ctxt_proto
@@ -415,7 +415,7 @@ let check_mempool oph =
       >>= function
       | Ok op -> (
          match (op.receipt, op.protocol_data) with
-         | (Apply_results.Operation_metadata omd, Operation_data od) ->
+         | (Some Apply_results.Operation_metadata omd, Operation_data od) ->
             begin
               match Apply_results.kind_equal_list od.contents omd.contents with
               | Some Apply_results.Eq ->
@@ -426,7 +426,7 @@ let check_mempool oph =
       )
       | Error err -> catch_error_f err
      end
-  | Error err -> catch_error_f err *)
+  | Error err -> catch_error_f err
 
 let get_balance c =
   let ctxt_proto = new wrap_full !ctxt in
